@@ -12,6 +12,8 @@ install:
 	npm install --prefix ./project/stock-service
 	echo '################# stock-movement-analytics ###########################' 
 	npm install --prefix ./project/stock-movement-analytics
+	echo '####################### e2e #################################' 
+	npm install --prefix ./e2e
 
 build:
 	docker-compose -f ./docker/docker-compose.yml build

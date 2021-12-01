@@ -10,7 +10,7 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "@thundra/core": "^2.13.19",
+    "@thundra/core": "^2.13.20",
     "axios": "^0.24.0",
     "docker-compose": "^0.23.13",
     "jest": "^27.0.0",
