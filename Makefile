@@ -18,11 +18,11 @@ install:
 build:
 	docker-compose -f ./docker/docker-compose.yml build
 
-deploy:
-	docker-compose -f ./docker/docker-compose.yml up
+# deploy:
+# 	docker-compose -f ./docker/docker-compose.yml up
 
-undeploy:	 
-	docker-compose -f ./docker/docker-compose.yml down
+# undeploy:	 
+# 	docker-compose -f ./docker/docker-compose.yml down
 
 test:
 	npm --prefix ./e2e run test
