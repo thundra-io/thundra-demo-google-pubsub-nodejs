@@ -1,8 +1,3 @@
-// process.env['THUNDRA_AGENT_APPLICATION_NAME'] = process.env.npm_package_name;
-// process.env['THUNDRA_AGENT_REPORT_REST_BASEURL'] = 'https://collector.thundra.io/v1';
-// process.env['THUNDRA_APIKEY'] = '333397b2-8ee0-4c74-b001-108c1dc283d4'
-// process.env['thundra_agent_debug_enable'] = true;
-
 const thundra = require('@thundra/core');
 thundra.init();
 
