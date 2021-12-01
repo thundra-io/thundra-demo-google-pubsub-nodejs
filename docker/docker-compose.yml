@@ -1,0 +1,116 @@
+version: '3.7'
+
+services:
+    googlepubsub:
+      build: gcloud/
+      container_name: googlepubsub
+      environment:
+        - PUBSUB_PROJECT_ID=thundra-pubsub
+        - PUBSUB_LISTEN_ADDRESS=0.0.0.0:8432
+
+    redislock:
+      image: redis
+      container_name: redislock
+      expose:
+        - 6379
+
+    nginxthundra:
+      image: nginx
+      container_name: nginxthundra
+      restart: unless-stopped
+      command: > 
+          bash -c "./etc/nginx/wait.sh http:/orderservice:8080/order/health && nginx -g 'daemon off;'"
+      ports:
+        - "9090:80"
+      volumes:
+        - ./nginx/conf/nginx.conf:/etc/nginx/nginx.conf
+        - ./wait/wait.sh:/etc/nginx/wait.sh
+      depends_on:
+        - googlepubsub
+        - orderservice
+        - stockmovementdb
+
+    orderservice:
+      build: ../project/order-service
+      container_name: orderservice
+      env_file:
+        - ./environment/order-service.env
+      environment:
+        - THUNDRA_APIKEY=${THUNDRA_APIKEY}
+        - THUNDRA_AGENT_TRACE_INTEGRATIONS_HTTP_URL_DEPTH=4
+        - THUNDRA_AGENT_REPORT_REST_BASEURL=${THUNDRA_AGENT_REPORT_REST_BASEURL:-https://collector.thundra.io/v1}
+      command: > 
+          bash -c "./wait-for-it.sh --timeout=0 orderdb:27017 && ./wait.sh http://googlepubsub:8432 && npm start"
+      depends_on:
+        - orderdb
+        - redislock
+        - googlepubsub
+
+    orderdb:
+      image: mongo:latest
+      container_name: orderdb
+      restart: always
+      environment:
+        - MONGO_INITDB_ROOT_USERNAME=root
+        - MONGO_INITDB_ROOT_PASSWORD=123456
+        - MONGO_INITDB_DATABASE=orderdb
+      volumes:
+        - ./orderdb/mongo-init.js:/docker-entrypoint-initdb.d/mongo-init.js:ro
+
+    stockservice:
+      build: ../project/stock-service
+      container_name: stockservice
+      env_file:
+        - ./environment/stock-service.env
+      environment:
+        - THUNDRA_APIKEY=${THUNDRA_APIKEY}
+        - THUNDRA_AGENT_REPORT_SIZE_MAX=500000
+        - THUNDRA_AGENT_TRACE_INSTRUMENT_TRACEABLECONFIG=${THUNDRA_AGENT_TRACE_INSTRUMENT_TRACEABLECONFIG}
+        - THUNDRA_AGENT_REPORT_REST_BASEURL=${THUNDRA_AGENT_REPORT_REST_BASEURL:-https://collector.thundra.io/v1}
+        #- THUNDRA_AGENT_TRACE_SPAN_LISTENERCONFIG=${THUNDRA_GOOGLE_PUBSUB_CHAOS}
+      command: > 
+          bash -c "./wait-for-it.sh --timeout=0 stockdb:27017 && ./wait.sh http://googlepubsub:8432 && npm start"
+      depends_on:
+        - stockdb
+        - redislock
+        - googlepubsub
+
+    stockdb:
+      image: mongo:latest
+      container_name: stockdb
+      restart: always
+      environment:
+        - MONGO_INITDB_ROOT_USERNAME=root
+        - MONGO_INITDB_ROOT_PASSWORD=123456
+        - MONGO_INITDB_DATABASE=stockdb
+      volumes:
+        - ./stockdb/mongo-init.js:/docker-entrypoint-initdb.d/mongo-init.js:ro
+
+    stockmovementdb:
+      image: mongo:latest
+      container_name: stockmovementdb
+      restart: always
+      environment:
+        - MONGO_INITDB_ROOT_USERNAME=root
+        - MONGO_INITDB_ROOT_PASSWORD=123456
+        - MONGO_INITDB_DATABASE=stockmovementdb
+      volumes:
+        - ./stockmovementdb/mongo-init.js:/docker-entrypoint-initdb.d/mongo-init.js:ro
+
+    stockmovementservice:
+      build: ../project/stock-movement-analytics
+      container_name: stockmovementservice
+      env_file:
+        - ./environment/stock-movement-service.env
+      environment:
+        - THUNDRA_APIKEY=${THUNDRA_APIKEY}
+        - THUNDRA_AGENT_REPORT_REST_BASEURL=${THUNDRA_AGENT_REPORT_REST_BASEURL:-https://collector.thundra.io/v1}
+      command: > 
+          bash -c "./wait-for-it.sh --timeout=0 stockmovementdb:27017 && ./wait.sh http://googlepubsub:8432 && npm start"
+      depends_on:
+        - stockmovementdb
+        - redislock
+        - googlepubsub
+
+
+

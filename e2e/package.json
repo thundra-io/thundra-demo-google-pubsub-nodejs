@@ -1,0 +1,20 @@
+{
+  "name": "e2e",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "jest",
+    "start": "node src/index.js"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "@thundra/core": "^2.13.19",
+    "axios": "^0.24.0",
+    "docker-compose": "^0.23.13",
+    "jest": "^27.0.0",
+    "jest-circus": "^27.0.0",
+    "url-join": "^4.0.1"
+  }
+}

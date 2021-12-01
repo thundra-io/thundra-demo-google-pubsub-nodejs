@@ -1,0 +1,11 @@
+const ORDER_STATUSES = {
+    PREPARING: 500,
+    CANCELED_CLIENT: 1200,
+};
+
+const SERVICE_UUID_CONST = '3cda958c-e704-56ff-b519-ab2e3dc3ccc7';
+
+module.exports = {
+    ORDER_STATUSES,
+    SERVICE_UUID_CONST
+}
