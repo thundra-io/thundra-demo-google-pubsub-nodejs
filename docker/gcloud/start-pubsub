@@ -1,0 +1,22 @@
+#!/usr/bin/env bash
+
+# Check user environment variable
+if [[ -z "${PUBSUB_PROJECT_ID}" ]]; then
+  echo "Missing PUBSUB_PROJECT_ID environment variable" >&2
+  exit 1
+fi
+
+if [[ -z "${PUBSUB_LISTEN_ADDRESS}" ]]; then
+  echo "Missing PUBSUB_LISTEN_ADDRESS environment variable" >&2
+  exit 1
+fi
+
+sleep 15
+
+# Config gcloud project
+gcloud config set project ${PUBSUB_PROJECT_ID}
+
+# Start emulator
+gcloud beta emulators pubsub start \
+  --data-dir=/opt/data \
+  --host-port=${PUBSUB_LISTEN_ADDRESS}

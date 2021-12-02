@@ -1,0 +1,19 @@
+{
+  "name": "stock-movement-analytics",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "start": "node src/index.js"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "@google-cloud/pubsub": "^2.18.3",
+    "@koa/cors": "^3.1.0",
+    "@koa/router": "^10.1.1",
+    "@thundra/core": "^2.13.20",
+    "koa": "^2.13.1",
+    "mongoose": "^6.0.13"
+  }
+}
