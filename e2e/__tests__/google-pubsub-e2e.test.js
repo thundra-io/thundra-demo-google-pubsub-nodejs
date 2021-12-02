@@ -56,7 +56,7 @@ describe('App Request E2E', function () {
                 throw error;   
             }
         }, 
-        40,
+        60,
         2);
     });
 
