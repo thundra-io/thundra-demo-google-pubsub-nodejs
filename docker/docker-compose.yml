@@ -112,5 +112,20 @@ services:
         - redislock
         - googlepubsub
 
+    # needs google cloud big query credentials
+    # create google console project and create big query dataset & table for try
+    #orderanalyticservice:
+    #  build: ../project/order-service-analytics
+    #  container_name: orderanalyticservice
+    #  env_file:
+    #    - ./environment/order-service-analytics.env
+    #  environment:
+    #    - THUNDRA_APIKEY=${THUNDRA_APIKEY}
+    #    - THUNDRA_AGENT_REPORT_REST_BASEURL=${THUNDRA_AGENT_REPORT_REST_BASEURL:-https://collector.thundra.io/v1}
+    #  command: > 
+    #      bash -c "./wait.sh http://googlepubsub:8432 && npm start"
+    #  depends_on:
+    #    - googlepubsub
+
 
 

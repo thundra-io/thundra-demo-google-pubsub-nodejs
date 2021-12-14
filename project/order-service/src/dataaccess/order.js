@@ -24,8 +24,10 @@ const cancelOrder = async (orderId) => {
         $set: {
             status: ORDER_STATUSES.CANCELED_CLIENT,
         },
+    },{
+        new: true,
     })
-    .select({ "_id": 1, "basket": 1})
+    .select({ "_id": 1, "basket": 1, "client": 1, "createdAt": 1, "updatedAt": 1})
     .lean()
     .exec());
 }

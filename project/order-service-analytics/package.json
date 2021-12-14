@@ -1,0 +1,16 @@
+{
+  "name": "order-service-analytics",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "start": "node src/index.js"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "@google-cloud/bigquery": "^5.9.3",
+    "@google-cloud/pubsub": "^2.18.4",
+    "@thundra/core": "^2.13.24"
+  }
+}
